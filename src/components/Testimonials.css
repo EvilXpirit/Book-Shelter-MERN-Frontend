@@ -1,0 +1,223 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .sr-only {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    clip: rect(0 0 0 0);
+  }
+  
+  .view {
+    display: grid;
+    min-height: 80vh;
+    position: relative;
+  }
+  
+  @media (max-width: 767px) and (max-height: 665px) {
+    .view {
+      min-height: 700px;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .view {
+      gap: 64px;
+      padding: 24px;
+      text-align: center;
+      justify-content: center;
+      grid-template-rows: 310px 200px;
+      grid-template-columns: minmax(0, 375px);
+    }
+  }
+  
+  .curve {
+    left: 0;
+    bottom: 0;
+    z-index: -1;
+    width: 100%;
+    height: 70px;
+    position: absolute;
+    background: url("https://raw.githubusercontent.com/Mhmd-Tarek-Mhmd/Testimonials-Slider/5c60f6ce078e257223c7925df3ee75604b6a06cd/images/pattern-curve.svg") no-repeat left center / contain !important;
+  }
+  
+  @media (min-width: 768px) {
+    .view {
+      padding-right: 5%;
+      align-items: center;
+      grid-template-columns: 1fr 1fr;
+    }
+    .curve {
+      height: 155px;
+    }
+  }
+  
+  @media (min-width: 1400px) {
+    .view {
+      grid-template-columns: repeat(2, 700px);
+    }
+  }
+  
+  .wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+  }
+  
+  .background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: url("https://raw.githubusercontent.com/Mhmd-Tarek-Mhmd/Testimonials-Slider/5c60f6ce078e257223c7925df3ee75604b6a06cd/images/pattern-bg.svg") no-repeat center center / contain !important;
+  }
+  
+  .person {
+    bottom: -4px;
+    max-width: 254px;
+    max-height: 254px;
+    position: relative;
+    border-radius: 5px;
+  }
+
+  /* .person img{
+    width: 254px !important;
+    height: 254px !important;
+  } */
+
+  
+  .controls {
+    gap: 32px;
+    left: 50%;
+    bottom: -22px;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 40px;
+    display: flex;
+    position: absolute;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    box-shadow: rgb(0 0 0 / 5%) 3px 5px 5px;
+  }
+  
+  .controls button {
+    border: none;
+    background: none;
+  }
+  
+  .controls button:disabled {
+    opacity: 0.3;
+    cursor: no-drop;
+  }
+  
+  .controls button img {
+    width: 10px;
+    height: 14px;
+  }
+  
+  @media (min-width: 768px) {
+    .person {
+      width: 80%;
+      height: auto;
+    }
+    .controls {
+      left: 5%;
+      transform: translateX(0);
+    }
+  }
+  
+  @media (min-width: 1400px) {
+    .person {
+      width: 100%;
+    }
+  }
+  
+  .text {
+    gap: 28px;
+    display: grid;
+    font-weight: 300;
+    position: relative;
+    color: hsl(240, 38%, 20%);
+    font-family: "Inter", sans-serif;
+  }
+  
+  .text::before {
+    left: 50%;
+    top: -27px;
+    content: "";
+    width: 60px;
+    height: 50px;
+    position: absolute;
+    transform: translateX(-50%);
+    background: url("https://raw.githubusercontent.com/Mhmd-Tarek-Mhmd/Testimonials-Slider/5c60f6ce078e257223c7925df3ee75604b6a06cd/images/pattern-quotes.svg") no-repeat top center / contain;
+  }
+  
+  .text span {
+    font-weight: 500;
+    margin-left: 10px;
+    color: hsl(240, 68%, 61%);
+  }
+  
+  @media (max-width: 767px) {
+    .text q {
+      font-size: 19px;
+      padding: 0 10px;
+    }
+    .text span {
+      display: block;
+      margin: 5px 0 0;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .text {
+      order: -1;
+      left: 10vw;
+    }
+    .text::before {
+      left: 20%;
+      top: -43px;
+      width: 90px;
+      height: 70px;
+    }
+    .text q {
+      font-size: 20px;
+    }
+    .text strong,
+    .text span {
+      font-size: 14px;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .text q {
+      font-size: 24px;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .text q {
+      width: 90%;
+      font-size: 32px;
+    }
+    .text::before {
+      top: -70px;
+      width: 140px;
+      height: 100px;
+    }
+    .text strong {
+      font-size: 18px;
+    }
+    .text span {
+      font-size: 16px;
+    }
+  }
+  
