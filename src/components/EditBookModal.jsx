@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import baseUrl from '../../Urls';
 
 const EditBookModal = ({ book, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -24,7 +25,7 @@ const EditBookModal = ({ book, onClose, onSave }) => {
 
   const handleSave = async () => {
     try {
-      await axios.put(`http://localhost:3000/api/books/${book._id}`, formData);
+      await axios.put(`${baseUrl}/api/books/${book._id}`, formData);
       onSave(book._id, formData);
       onClose();
     } catch (error) {

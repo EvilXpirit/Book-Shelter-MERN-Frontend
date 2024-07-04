@@ -1,4 +1,3 @@
-// withCart.js
 import React from "react";
 import useCart from "./useCart";
 import CartOverlay from "./CartOverlay";

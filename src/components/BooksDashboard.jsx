@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import EditBookModal from './EditBookModal';
+import baseUrl from '../../Urls';
 
 const BooksDashboard = () => {
   const [books, setBooks] = useState([]);
@@ -11,7 +12,7 @@ const BooksDashboard = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get(`${baseUrl}api/books`);
+        const response = await axios.get(`${baseUrl}/api/books`);
         const sortedBooks = response.data.sort((a, b) => a.authorName.localeCompare(b.authorName));
         setBooks(sortedBooks);
         console.log('Fetched books:', response.data);
@@ -29,7 +30,7 @@ const BooksDashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/books/${id}`);
+      await axios.delete(`${baseUrl}/api/books/${id}`);
       setBooks(books.filter(book => book._id !== id));
       console.log('Deleted book with id:', id);
     } catch (error) {

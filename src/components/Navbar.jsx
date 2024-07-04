@@ -6,6 +6,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Link as ScrollLink, scroller } from 'react-scroll';
 import axios from 'axios';
 import withCart from './withCart';
+import baseUrl from '../../Urls';
 
 const Navbar = ({ cart, setShowCart }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -32,7 +33,7 @@ const Navbar = ({ cart, setShowCart }) => {
         throw new Error('No token found');
       }
 
-      await axios.post('http://localhost:3000/api/auth/logout', {}, {
+      await axios.post(`${baseUrl}/api/auth/logout`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -56,7 +57,7 @@ const Navbar = ({ cart, setShowCart }) => {
           duration: 500,
           smooth: true,
         });
-      }, 100); // Adjust timeout as needed
+      }, 100); 
     } else {
       scroller.scrollTo('new-arrivals', {
         duration: 500,

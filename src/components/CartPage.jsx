@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useCart from './useCart';
 import CheckoutModal from './CheckoutModal';
+import baseUrl from '../../Urls';
 
 const CartPage = () => {
   const { cart, setCart, showCart, setShowCart, removeFromCart } = useCart();
@@ -21,7 +22,7 @@ const CartPage = () => {
 
     const fetchUserDetails = async (username) => {
       try {
-        const response = await fetch(`http://localhost:3000/api/auth/users?username=${username}`);
+        const response = await fetch(`${baseUrl}/api/auth/users?username=${username}`);
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);
@@ -42,7 +43,7 @@ const CartPage = () => {
 
   const handleIncrement = async (itemId) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/cart/${itemId}/increment`, {
+      const response = await fetch(`${baseUrl}/api/cart/${itemId}/increment`, {
         method: 'PUT',
       });
       const updatedCartItem = await response.json();
@@ -57,7 +58,7 @@ const CartPage = () => {
 
   const handleDecrement = async (itemId) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/cart/${itemId}/decrement`, {
+      const response = await fetch(`${baseUrl}/api/cart/${itemId}/decrement`, {
         method: 'PUT',
       });
       const updatedCartItem = await response.json();

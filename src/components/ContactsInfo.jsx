@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import baseUrl from '../../Urls';
 
 const ContactsInfo = () => {
   const [contacts, setContact] = useState([]);
@@ -9,7 +10,7 @@ const ContactsInfo = () => {
   useEffect(() => {
     const fetchContact = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/contact');
+        const response = await axios.get(`${baseUrl}/api/contact`);
         setContact(response.data);
         console.log('Fetched contacts:', response.data);
       } catch (error) {

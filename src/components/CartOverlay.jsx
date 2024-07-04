@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CheckoutModal from './CheckoutModal';
+import baseUrl from '../../Urls';
 
 const CartOverlay = ({ cart, setCart, setShowCart, removeFromCart }) => {
   const [showCheckout, setShowCheckout] = useState(false);
@@ -19,7 +20,7 @@ const CartOverlay = ({ cart, setCart, setShowCart, removeFromCart }) => {
 
     const fetchUserDetails = async (username) => {
       try {
-        const response = await fetch(`http://localhost:3000/api/auth/users?username=${username}`);
+        const response = await fetch(`${baseUrl}/api/auth/users?username=${username}`);
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);
@@ -40,7 +41,7 @@ const CartOverlay = ({ cart, setCart, setShowCart, removeFromCart }) => {
 
   const handleIncrement = async (itemId) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/cart/${itemId}/increment`, {
+      const response = await fetch(`${baseUrl}/api/cart/${itemId}/increment`, {
         method: 'PUT',
       });
       const updatedCartItem = await response.json();
@@ -55,7 +56,7 @@ const CartOverlay = ({ cart, setCart, setShowCart, removeFromCart }) => {
 
   const handleDecrement = async (itemId) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/cart/${itemId}/decrement`, {
+      const response = await fetch(`${baseUrl}/api/cart/${itemId}/decrement`, {
         method: 'PUT',
       });
       const updatedCartItem = await response.json();

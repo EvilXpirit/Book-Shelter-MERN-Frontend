@@ -6,6 +6,7 @@ import ContactForm from './ContactUs';
 import TestimonialSlider from './TestimonialSlider';
 import NewArrivalsSwiper from './NewArrivalsSwiper'; 
 import withCart from "./withCart";
+import baseUrl from '../../Urls';
 
 const LandingPage = () => {
   const [booksByAuthor, setBooksByAuthor] = useState([]);
@@ -17,7 +18,7 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/books");
+        const response = await fetch(`${baseUrl}/api/books`);
         const data = await response.json();
         // Group books by author name
         const booksGroupedByAuthor = groupBooksByAuthor(data);
@@ -33,7 +34,7 @@ const LandingPage = () => {
 
   const addToWishlist = async (book) => {
     try {
-      const response = await fetch("http://localhost:3000/api/wishlist", {
+      const response = await fetch(`${baseUrl}/api/wishlist`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +50,7 @@ const LandingPage = () => {
 
   const addToCart = async (book) => {
     try {
-      const response = await fetch("http://localhost:3000/api/cart", {
+      const response = await fetch(`${baseUrl}/api/cart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

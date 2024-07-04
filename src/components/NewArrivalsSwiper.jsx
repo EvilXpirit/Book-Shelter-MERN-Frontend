@@ -5,6 +5,7 @@ import { faEye } from '@fortawesome/free-solid-svg-icons';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
+import baseUrl from '../../Urls';
 
 const NewArrivalsSwiper = ({ book, openModal}) => {
   const [books, setBooks] = useState([]);
@@ -12,7 +13,7 @@ const NewArrivalsSwiper = ({ book, openModal}) => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/books/new-arrivals');
+        const response = await fetch(`${baseUrl}/api/books/new-arrivals`);
         const data = await response.json();
         setBooks(data);
       } catch (error) {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import baseUrl from '../../Urls';
 
 const CheckoutModal = ({ cart, totalPrice, setShowCheckout, user, clearCart }) => {
   const [address, setAddress] = useState('');
@@ -12,7 +13,7 @@ const CheckoutModal = ({ cart, totalPrice, setShowCheckout, user, clearCart }) =
     const username = localStorage.getItem('username');
     try {
       // Fetch user ID based on username
-      const userIdResponse = await fetch(`http://localhost:3000/api/auth/userId?username=${username}`);
+      const userIdResponse = await fetch(`${baseUrl}/api/auth/userId?username=${username}`);
       if (!userIdResponse.ok) {
         throw new Error(`Failed to fetch user ID. Status: ${userIdResponse.status}`);
       }
@@ -27,7 +28,7 @@ const CheckoutModal = ({ cart, totalPrice, setShowCheckout, user, clearCart }) =
       }));
 
       // Send purchase requests to backend for each item
-      const purchaseResponse = await fetch('http://localhost:3000/api/purchase', {
+      const purchaseResponse = await fetch(`${baseUrl}/api/purchase`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

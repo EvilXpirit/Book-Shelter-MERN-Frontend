@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Line, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import axios from 'axios';
+import baseUrl from '../../Urls';
 
 ChartJS.register(
   CategoryScale,
@@ -23,12 +24,12 @@ const ChartsPage = () => {
     const fetchData = async () => {
       try {
         // Fetch book data
-        const bookResponse = await axios.get('http://localhost:3000/api/books'); 
+        const bookResponse = await axios.get(`${baseUrl}/api/books`); 
         const books = bookResponse.data;
         console.log('Books:', books);
 
         // Fetch order data
-        const orderResponse = await axios.get('http://localhost:3000/api/purchase'); 
+        const orderResponse = await axios.get(`${baseUrl}/api/purchase`); 
         const orders = orderResponse.data;
         console.log('Orders:', orders);
 

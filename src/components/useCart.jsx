@@ -1,5 +1,6 @@
 // useCart.js
 import { useState, useEffect } from "react";
+import baseUrl from '../../Urls';
 
 const useCart = () => {
   const [cart, setCart] = useState([]);
@@ -8,7 +9,7 @@ const useCart = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/cart");
+        const response = await fetch(`${baseUrl}/api/cart`);
         const data = await response.json();
         setCart(data);
       } catch (error) {
@@ -21,7 +22,7 @@ const useCart = () => {
 
   const addToCart = async (book) => {
     try {
-      const response = await fetch("http://localhost:3000/api/cart", {
+      const response = await fetch(`${baseUrl}/api/cart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +38,7 @@ const useCart = () => {
 
   const removeFromCart = async (itemId) => {
     try {
-      await fetch(`http://localhost:3000/api/cart/${itemId}`, {
+      await fetch(`${baseUrl}/api/cart/${itemId}`, {
         method: "DELETE",
       });
       setCart(cart.filter((item) => item._id !== itemId));
