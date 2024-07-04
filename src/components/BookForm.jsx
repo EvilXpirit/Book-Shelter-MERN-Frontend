@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import baseUrl from '../../Urls';
 
 const AddBookForm = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ const AddBookForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3000/api/books', formData);
+      await axios.post(`${baseUrl}/api/books`, formData);
       alert('Book added successfully');
       setFormData({
         bookName: '',

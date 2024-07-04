@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import baseUrl from '../../Urls';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -15,7 +16,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/admin/users');
+        const response = await axios.get(`${baseUrl}/api/admin/users`);
         setUsers(response.data);
         console.log('Fetched users:', response.data);
       } catch (error) {
@@ -40,7 +41,7 @@ const AdminDashboard = () => {
 
   const handleDelete = async (userId) => {
     try {
-      await axios.delete(`http://localhost:3000/api/admin/users/${userId}`);
+      await axios.delete(`${baseUrl}/api/admin/users/${userId}`);
       setUsers(users.filter(user => user._id !== userId));
       console.log('Deleted user with ID:', userId);
     } catch (error) {
@@ -53,7 +54,7 @@ const AdminDashboard = () => {
     console.log('Submitting form with data:', formData);
     console.log('User ID for update:', editUser);
     try {
-      const response = await axios.put(`http://localhost:3000/api/admin/users/${editUser}`, formData);
+      const response = await axios.put(`${baseUrl}/api/admin/users/${editUser}`, formData);
       console.log('Update response:', response.data);
       setUsers(users.map(user => (user._id === editUser ? response.data : user)));
       setEditUser(null);
@@ -69,7 +70,6 @@ const AdminDashboard = () => {
     }
   };
   
-
   return (
     <div className="container mx-auto px-4 py-28">
       <h1 className="text-3xl text-white text-center font-bold mb-4">Admin Dashboard</h1>

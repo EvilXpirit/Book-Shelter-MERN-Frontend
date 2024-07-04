@@ -4,6 +4,7 @@ import { faBars, faTimes, faHome, faBook, faTableColumns, faSignOutAlt, faTruckR
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import logo from '../assets/book logo.png';
+import baseUrl from '../../Urls';
 
 const AdminNavbar = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -20,7 +21,7 @@ const AdminNavbar = () => {
         throw new Error('No token found');
       }
 
-      await axios.post('http://localhost:3000/api/auth/logout', {}, {
+      await axios.post(`${baseUrl}/api/auth/logout`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }

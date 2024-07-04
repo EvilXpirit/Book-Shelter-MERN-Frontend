@@ -5,6 +5,7 @@ import BookCard from "./BookCard";
 import WishlistOverlay from "./WishlistOverlay";
 import CartOverlay from "./CartOverlay";
 import BookDetailsModal from "./BookDetailsModal"; 
+import baseUrl from '../../Urls';
 // import CheckoutModal from './CheckoutModal';
 // import axios from 'axios';
 
@@ -34,7 +35,7 @@ const BooksPage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/books");
+        const response = await fetch(`${baseUrl}/api/books`);
         const data = await response.json();
         setBooks(data);
       } catch (error) {
@@ -48,7 +49,7 @@ const BooksPage = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/cart");
+        const response = await fetch(`${baseUrl}/api/cart`);
         const data = await response.json();
         setCart(data);
       } catch (error) {
@@ -62,7 +63,7 @@ const BooksPage = () => {
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/wishlist");
+        const response = await fetch(`${baseUrl}/api/wishlist`);
         const data = await response.json();
         setWishlist(data);
       } catch (error) {
@@ -120,7 +121,7 @@ const BooksPage = () => {
 
   const addToWishlist = async (book) => {
     try {
-      const response = await fetch("http://localhost:3000/api/wishlist", {
+      const response = await fetch(`${baseUrl}/api/wishlist`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +137,7 @@ const BooksPage = () => {
 
   const removeFromWishlist = async (itemId) => {
     try {
-      await fetch(`http://localhost:3000/api/wishlist/${itemId}`, {
+      await fetch(`${baseUrl}/api/wishlist/${itemId}`, {
         method: "DELETE",
       });
       setWishlist(wishlist.filter((item) => item._id !== itemId));
@@ -147,7 +148,7 @@ const BooksPage = () => {
 
   const addToCart = async (book) => {
     try {
-      const response = await fetch("http://localhost:3000/api/cart", {
+      const response = await fetch(`${baseUrl}/api/cart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -163,7 +164,7 @@ const BooksPage = () => {
 
   const removeFromCart = async (itemId) => {
     try {
-      await fetch(`http://localhost:3000/api/cart/${itemId}`, {
+      await fetch(`${baseUrl}/api/cart/${itemId}`, {
         method: "DELETE",
       });
       setCart(cart.filter((item) => item._id !== itemId));

@@ -11,7 +11,7 @@ const BooksDashboard = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/books');
+        const response = await axios.get(`${baseUrl}api/books`);
         const sortedBooks = response.data.sort((a, b) => a.authorName.localeCompare(b.authorName));
         setBooks(sortedBooks);
         console.log('Fetched books:', response.data);
