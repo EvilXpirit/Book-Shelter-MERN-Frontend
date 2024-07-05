@@ -35,7 +35,7 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="enquiry-form p-5 mx-4 sm:mx-auto w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mt-10 bg-gray-100/80 rounded-lg shadow-lg">
+    <div className="enquiry-form p-5 sm:mx-auto w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mt-10 bg-gray-100/80 rounded-lg shadow-lg">
       <h4 className="text-gray-700 text-xl mb-4">Need to get in touch with us?</h4>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <label className="text-gray-700">Name</label>
