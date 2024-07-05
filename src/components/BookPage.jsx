@@ -6,8 +6,6 @@ import WishlistOverlay from "./WishlistOverlay";
 import CartOverlay from "./CartOverlay";
 import BookDetailsModal from "./BookDetailsModal"; 
 import baseUrl from '../../Urls';
-// import CheckoutModal from './CheckoutModal';
-// import axios from 'axios';
 
 const BooksPage = () => {
   const [books, setBooks] = useState([]);
@@ -21,16 +19,6 @@ const BooksPage = () => {
   const [booksPerPage] = useState(8);
   const [selectedBook, setSelectedBook] = useState(null); 
   const [user, setUser] = useState(null); 
-  
-// const getUsernameFromLocalStorage = () => {
-//       try{
-//         const username = localStorage.getItem('username');
-//         console.log(username);
-//       } catch (error) {
-//         console.error("username not found", error);
-//       }
-//   };
-//   getUsernameFromLocalStorage();
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -173,8 +161,6 @@ const BooksPage = () => {
     }
   };
 
-
-
   const openModal = (book) => {
     setSelectedBook(book);
   };
@@ -188,15 +174,15 @@ const BooksPage = () => {
       <h1 className="text-4xl font-bold text-center text-white mb-8 drop-shadow-lg">
         Book Store
       </h1>
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center justify-center flex-1">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+        <div className="flex items-center justify-center flex-1 mb-4 md:mb-0">
           <label htmlFor="search" className="mr-2 text-white">
             Search:
           </label>
           <input
             type="text"
             id="search"
-            className="p-2 w-3/5 border border-gray-300 rounded bg-white/80 transition-all duration-200 ease-in-out hover:bg-white/90"
+            className="p-2 w-full md:w-3/5 border border-gray-300 rounded bg-white/80 transition-all duration-200 ease-in-out hover:bg-white/90"
             value={searchTerm}
             onChange={handleSearchChange}
           />
@@ -207,7 +193,7 @@ const BooksPage = () => {
           </label>
           <select
             id="category"
-            className="p-2 border border-gray-300 rounded bg-white/80"
+            className="p-2 w-full md:w-auto border border-gray-300 rounded bg-white/80"
             value={category}
             onChange={handleCategoryChange}
           >
@@ -249,7 +235,7 @@ const BooksPage = () => {
         <FontAwesomeIcon icon={faCartShopping} size="lg" />  <span className="text-sm">{cart.length} </span>
       </button>
       <button onClick={() => setShowWishlist(!showWishlist)} className="fixed top-28 right-20 bg-blue-700 text-white px-2 py-2 rounded-lg">
-        <FontAwesomeIcon icon={faHeart} size="lg" /> <span className="text-sm">{wishlist.length} </span>
+        <FontAwesomeIcon icon={faHeart} size="lg" /> <span className="text-sm">{wishlist.length}</span>
       </button>
     </div>
   );
