@@ -119,7 +119,7 @@ const LandingPage = () => {
 
       <div className="enquiry p-5 pt-14">
       <h1 className="text-4xl font-bold text-center text-white mb-8 drop-shadow-lg">
-        Contact Us
+        Send us your feedback
       </h1>
       <ContactForm />
       </div>
