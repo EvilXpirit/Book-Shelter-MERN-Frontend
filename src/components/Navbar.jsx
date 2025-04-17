@@ -65,6 +65,56 @@ const Navbar = ({ cart, setShowCart }) => {
       });
     }
   };
+  const renderNavItems = () => {
+    const commonItems = [
+      <li key="home">
+        <RouterLink to="/" className="hover:text-yellow-400">
+          <FontAwesomeIcon icon={faHome} className="pr-2" />
+          Home
+        </RouterLink>
+      </li>,
+      <li key="books">
+        <button onClick={handleBooksClick} className="hover:text-yellow-400">
+          <FontAwesomeIcon icon={faBook} className="pr-2" />
+          Books
+        </button>
+      </li>,
+      <li key="explore">
+        <RouterLink to="/bookspage" className="hover:text-yellow-400">
+          <FontAwesomeIcon icon={faCompass} className="pr-2" />
+          Explore
+        </RouterLink>
+      </li>
+    ];
+
+    if (isLoggedIn) {
+      return [
+        ...commonItems,
+        <li key="cart">
+          <RouterLink to="/cart" className="hover:text-yellow-400">
+            <FontAwesomeIcon icon={faShoppingCart} className="pr-2" />
+            ({cart.length})
+          </RouterLink>
+        </li>,
+        <li key="logout">
+          <button onClick={handleLogout} className="hover:text-yellow-400">
+            <FontAwesomeIcon icon={faSignOutAlt} className="pr-2" />
+            Sign Out
+          </button>
+        </li>
+      ];
+    } else {
+      return [
+        ...commonItems,
+        <li key="login">
+          <RouterLink to="/login" className="hover:text-yellow-400">
+            <FontAwesomeIcon icon={faUser} className="pr-2" />
+            Login
+          </RouterLink>
+        </li>
+      ];
+    }
+  };
 
   return (
     <nav className="bg-gradient-to-r from-blue-900 to-blue-600 p-4 fixed w-full top-0 left-0 z-50">
@@ -75,50 +125,12 @@ const Navbar = ({ cart, setShowCart }) => {
           </RouterLink>
         </div>
         <div className="lg:hidden">
-        <button onClick={toggleMenu} className="text-white focus:outline-none">
+          <button onClick={toggleMenu} className="text-white focus:outline-none">
             {showMenu ? <FontAwesomeIcon icon={faTimes} /> : <FontAwesomeIcon icon={faBars} />}
           </button>
         </div>
         <ul className={`lg:flex ${showMenu ? 'flex flex-col absolute top-20 left-0 right-0 bg-blue-700 p-5' : 'hidden'} space-y-4 lg:space-y-0 lg:space-x-8 text-white text-base`}>
-          <li>
-            <RouterLink to="/" className="hover:text-yellow-400">
-              <FontAwesomeIcon icon={faHome} className="pr-2" />
-              Home
-            </RouterLink>
-          </li>
-          <li>
-            <button onClick={handleBooksClick} className="hover:text-yellow-400">
-              <FontAwesomeIcon icon={faBook} className="pr-2" />
-              Books
-            </button>
-          </li>
-          <li>
-            <RouterLink to="/bookspage" className="hover:text-yellow-400">
-              <FontAwesomeIcon icon={faCompass} className="pr-2" />
-              Explore
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/cart" className="hover:text-yellow-400">
-              <FontAwesomeIcon icon={faShoppingCart} className="pr-2" />
-              ({cart.length})
-            </RouterLink>
-          </li>
-          {isLoggedIn ? (
-            <li>
-              <button onClick={handleLogout} className="hover:text-yellow-400">
-                <FontAwesomeIcon icon={faSignOutAlt} className="pr-2" />
-                Sign Out
-              </button>
-            </li>
-          ) : (
-            <li>
-              <RouterLink to="/login" className="hover:text-yellow-400">
-                <FontAwesomeIcon icon={faUser} className="pr-2" />
-                Login
-              </RouterLink>
-            </li>
-          )}
+          {renderNavItems()}
         </ul>
       </div>
     </nav>

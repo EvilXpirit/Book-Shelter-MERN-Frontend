@@ -3,6 +3,7 @@
 // export default baseUrl;
 
 const baseUrl = 'https://book-shelter-backend.vercel.app';
+const localUrl = 'http://localhost:3000';
 export default baseUrl;
 
 

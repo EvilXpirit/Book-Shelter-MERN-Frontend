@@ -6,6 +6,19 @@ import WishlistOverlay from "./WishlistOverlay";
 import CartOverlay from "./CartOverlay";
 import BookDetailsModal from "./BookDetailsModal"; 
 import baseUrl from '../../Urls';
+import { toast } from 'react-toastify';
+
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': token ? `Bearer ${token}` : ''
+  };
+};
+
+const isAuthenticated = () => {
+  return !!localStorage.getItem('token');
+};
 
 const BooksPage = () => {
   const [books, setBooks] = useState([]);
@@ -28,6 +41,7 @@ const BooksPage = () => {
         setBooks(data);
       } catch (error) {
         console.error("Error fetching books:", error);
+        toast.error("Failed to load books");
       }
     };
 
@@ -36,8 +50,13 @@ const BooksPage = () => {
 
   useEffect(() => {
     const fetchCart = async () => {
+      if (!isAuthenticated()) return;
+      
       try {
-        const response = await fetch(`${baseUrl}/api/cart`);
+        const response = await fetch(`${baseUrl}/api/cart`, {
+          headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Failed to fetch cart');
         const data = await response.json();
         setCart(data);
       } catch (error) {
@@ -50,8 +69,13 @@ const BooksPage = () => {
 
   useEffect(() => {
     const fetchWishlist = async () => {
+      if (!isAuthenticated()) return;
+
       try {
-        const response = await fetch(`${baseUrl}/api/wishlist`);
+        const response = await fetch(`${baseUrl}/api/wishlist`, {
+          headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Failed to fetch wishlist');
         const data = await response.json();
         setWishlist(data);
       } catch (error) {
@@ -108,56 +132,88 @@ const BooksPage = () => {
   };
 
   const addToWishlist = async (book) => {
+    if (!isAuthenticated()) {
+      toast("Please log in to add items to your wishlist");
+      return;
+    }
+
     try {
       const response = await fetch(`${baseUrl}/api/wishlist`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ bookId: book._id }),
       });
+      
+      if (!response.ok) throw new Error('Failed to add to wishlist');
+      
       const data = await response.json();
       setWishlist([...wishlist, data]);
+      toast.success("Added to wishlist successfully!");
     } catch (error) {
       console.error("Error adding to wishlist:", error);
+      toast.error("Failed to add to wishlist");
     }
   };
 
   const removeFromWishlist = async (itemId) => {
+    if (!isAuthenticated()) return;
+
     try {
-      await fetch(`${baseUrl}/api/wishlist/${itemId}`, {
+      const response = await fetch(`${baseUrl}/api/wishlist/${itemId}`, {
         method: "DELETE",
+        headers: getAuthHeaders()
       });
+      
+      if (!response.ok) throw new Error('Failed to remove from wishlist');
+      
       setWishlist(wishlist.filter((item) => item._id !== itemId));
+      toast("Removed from wishlist");
     } catch (error) {
       console.error("Error removing wishlist item:", error);
+      toast.error("Failed to remove from wishlist");
     }
   };
 
   const addToCart = async (book) => {
+    if (!isAuthenticated()) {
+      toast("Please log in to add items to your cart");
+      return;
+    }
+
     try {
       const response = await fetch(`${baseUrl}/api/cart`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ bookId: book._id, quantity: 1 }),
       });
+      
+      if (!response.ok) throw new Error('Failed to add to cart');
+      
       const data = await response.json();
       setCart([...cart, data]);
+      toast.success("Added to cart successfully!");
     } catch (error) {
       console.error("Error adding to cart:", error);
+      toast.error("Failed to add to cart");
     }
   };
 
   const removeFromCart = async (itemId) => {
+    if (!isAuthenticated()) return;
+
     try {
-      await fetch(`${baseUrl}/api/cart/${itemId}`, {
+      const response = await fetch(`${baseUrl}/api/cart/${itemId}`, {
         method: "DELETE",
+        headers: getAuthHeaders()
       });
+      
+      if (!response.ok) throw new Error('Failed to remove from cart');
+      
       setCart(cart.filter((item) => item._id !== itemId));
+      toast("Removed from cart");
     } catch (error) {
       console.error("Error removing from cart:", error);
+      toast.error("Failed to remove from cart");
     }
   };
 

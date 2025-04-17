@@ -7,6 +7,7 @@ import TestimonialSlider from './TestimonialSlider';
 import NewArrivalsSwiper from './NewArrivalsSwiper'; 
 import withCart from "./withCart";
 import baseUrl from '../../Urls';
+import { toast } from 'react-toastify';
 
 const LandingPage = () => {
   const [booksByAuthor, setBooksByAuthor] = useState([]);
@@ -14,6 +15,19 @@ const LandingPage = () => {
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
   const [selectedBook, setSelectedBook] = useState(null); 
+
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': token ? `Bearer ${token}` : ''
+    };
+  };
+  
+  const isAuthenticated = () => {
+    return !!localStorage.getItem('token');
+  };
+  
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -33,34 +47,50 @@ const LandingPage = () => {
   
 
   const addToWishlist = async (book) => {
+    if (!isAuthenticated()) {
+      toast("Please log in to add items to your wishlist");
+      return;
+    }
+
     try {
       const response = await fetch(`${baseUrl}/api/wishlist`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ bookId: book._id }),
       });
+      
+      if (!response.ok) throw new Error('Failed to add to wishlist');
+      
       const data = await response.json();
       setWishlist([...wishlist, data]);
+      toast.sucess("Added to wishlist successfully!");
     } catch (error) {
       console.error("Error adding to wishlist:", error);
+      toast.error("Failed to add to wishlist");
     }
   };
 
   const addToCart = async (book) => {
+    if (!isAuthenticated()) {
+      toast("Please log in to add items to your cart");
+      return;
+    }
+
     try {
       const response = await fetch(`${baseUrl}/api/cart`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ bookId: book._id, quantity: 1 }),
       });
+      
+      if (!response.ok) throw new Error('Failed to add to cart');
+      
       const data = await response.json();
       setCart([...cart, data]);
+      alert("Added to cart successfully!");
     } catch (error) {
       console.error("Error adding to cart:", error);
+      alert("Failed to add to cart");
     }
   };
 

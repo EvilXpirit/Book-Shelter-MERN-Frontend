@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import baseUrl from '../../Urls';
+import { toast } from 'react-toastify';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -31,9 +32,9 @@ const Signup = () => {
         password: formData.password,
         mobileNumber: formData.mobileNumber,
       });
-      alert("User registered successfully");
+      toast.success("User registered successfully");
     } catch (error) {
-      alert("Error registering user: " + error.response.data);
+      toast.error("Error registering user: " + error.response.data);
     }
   };
 
