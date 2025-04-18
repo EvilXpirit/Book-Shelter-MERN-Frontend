@@ -85,20 +85,32 @@ const Navbar = ({ cart, setShowCart }) => {
       if (!token) {
         throw new Error('No token found');
       }
-
-      await axios.post(`${baseUrl}/api/auth/logout`, {}, {
+  
+      const response = await axios.post(`${baseUrl}/api/auth/logout`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-
+  
+      // Clear authentication data and redirect
       localStorage.removeItem('token');
       localStorage.removeItem('username');
       setIsLoggedIn(false);
       navigate('/login');
+  
     } catch (error) {
       console.error('Error logging out:', error);
-      alert('Error logging out: ' + (error.response?.data || error.message));
+      
+      // Handle expired token response
+      if (error.response?.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        setIsLoggedIn(false);
+        navigate('/login');
+      } else {
+        // Handle other errors
+        alert('Error logging out: ' + (error.response?.data?.message || error.message));
+      }
     }
   };
 
