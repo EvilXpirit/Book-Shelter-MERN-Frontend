@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faTimes, faHome, faBook, faCompass, faUser, faSignOutAlt, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faTimes, faHome, faBook, faCompass, faUser, faSignOutAlt, faShoppingCart, faSearch } from '@fortawesome/free-solid-svg-icons';
 import logo from '../assets/book logo.png';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import { Link as ScrollLink, scroller } from 'react-scroll';
 import axios from 'axios';
 import withCart from './withCart';
@@ -12,6 +12,19 @@ const Navbar = ({ cart, setShowCart }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const location = useLocation();
+
+    // Handle navbar background on scroll
+    useEffect(() => {
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > 20);
+      };
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -68,21 +81,33 @@ const Navbar = ({ cart, setShowCart }) => {
   const renderNavItems = () => {
     const commonItems = [
       <li key="home">
-        <RouterLink to="/" className="hover:text-yellow-400">
+        <RouterLink 
+          to="/" 
+          className={`hover:text-yellow-400 relative group py-2 px-3 transition-all duration-300
+            ${location.pathname === '/' ? 'text-yellow-400' : 'text-white'}`}
+        >
           <FontAwesomeIcon icon={faHome} className="pr-2" />
           Home
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 group-hover:w-full transition-all duration-300"></span>
         </RouterLink>
       </li>,
       <li key="books">
-        <button onClick={handleBooksClick} className="hover:text-yellow-400">
+        <button onClick={handleBooksClick}   className={`hover:text-yellow-400 relative group py-2 px-3 transition-all duration-300 text-white`}
+        >
           <FontAwesomeIcon icon={faBook} className="pr-2" />
           Books
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 group-hover:w-full transition-all duration-300"></span>
         </button>
       </li>,
       <li key="explore">
-        <RouterLink to="/bookspage" className="hover:text-yellow-400">
+                <RouterLink 
+          to="/bookspage" 
+          className={`hover:text-yellow-400 relative group py-2 px-3 transition-all duration-300
+            ${location.pathname === '/bookspage' ? 'text-yellow-400' : 'text-white'}`}
+        >
           <FontAwesomeIcon icon={faCompass} className="pr-2" />
           Explore
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 group-hover:w-full transition-all duration-300"></span>
         </RouterLink>
       </li>
     ];
@@ -91,15 +116,21 @@ const Navbar = ({ cart, setShowCart }) => {
       return [
         ...commonItems,
         <li key="cart">
-          <RouterLink to="/cart" className="hover:text-yellow-400">
+          <RouterLink to="/cart" className={`hover:text-yellow-400 py-2  px-3 relative group transition-all duration-300
+            ${location.pathname === '/cart' ? 'text-yellow-400' : 'text-white'}`}
+        >
             <FontAwesomeIcon icon={faShoppingCart} className="pr-2" />
             ({cart.length})
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 group-hover:w-full transition-all duration-300"></span>
           </RouterLink>
         </li>,
         <li key="logout">
-          <button onClick={handleLogout} className="hover:text-yellow-400">
+          <button onClick={handleLogout} className={`hover:text-yellow-400  px-3 relative group transition-all duration-300
+            ${location.pathname === '/logout' ? 'text-yellow-400' : 'text-white'}`}
+        >
             <FontAwesomeIcon icon={faSignOutAlt} className="pr-2" />
             Sign Out
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 -my-2 bg-yellow-400 group-hover:w-full transition-all duration-300"></span>
           </button>
         </li>
       ];
@@ -107,9 +138,12 @@ const Navbar = ({ cart, setShowCart }) => {
       return [
         ...commonItems,
         <li key="login">
-          <RouterLink to="/login" className="hover:text-yellow-400">
+          <RouterLink to="/login" className={`hover:text-yellow-400 py-2 relative group transition-all duration-300
+            ${location.pathname === '/login' ? 'text-yellow-400' : 'text-white'}`}
+        >
             <FontAwesomeIcon icon={faUser} className="pr-2" />
             Login
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 group-hover:w-full transition-all duration-300"></span>
           </RouterLink>
         </li>
       ];
@@ -117,21 +151,64 @@ const Navbar = ({ cart, setShowCart }) => {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-blue-900 to-blue-600 p-4 fixed w-full top-0 left-0 z-50">
-      <div className="container mx-auto flex justify-between items-center p-3">
-        <div className="flex items-center">
-          <RouterLink to="/">
-            <img src={logo} alt="Logo" className="w-auto h-12 mr-2" />
+    <nav className={`fixed w-full top-0 left-0 z-50 transition-all duration-300 ${
+      isScrolled ? 'bg-gradient-to-l from-blue-900/75 to-blue-600/75 backdrop-blur-md shadow-2xl' 
+      : 'bg-gradient-to-r from-blue-900/85 to-blue-600/85 p-5 shadow-lg rounded-b-lg'
+    }`}>
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex justify-between items-center">
+          {/* Logo */}
+          <RouterLink to="/" className="flex items-center space-x-2 group">
+            <img 
+              src={logo} 
+              alt="Logo" 
+              className="w-auto h-12 transition-transform duration-300 group-hover:scale-110" 
+            />
           </RouterLink>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-8 list-none">
+            {renderNavItems()}
+          </div>
+
+          {/* Mobile Navigation Button */}
+          <div className="lg:hidden flex items-center space-x-4">
+            {/* <button 
+              onClick={() => setShowSearch(!showSearch)}
+              className="text-white p-2 hover:text-yellow-400 transition-colors duration-300"
+            >
+              <FontAwesomeIcon icon={faSearch} />
+            </button> */}
+            <button 
+              onClick={toggleMenu} 
+              className="text-white p-2 hover:text-yellow-400 transition-colors duration-300"
+            >
+              <FontAwesomeIcon icon={showMenu ? faTimes : faBars} />
+            </button>
+          </div>
         </div>
-        <div className="lg:hidden">
-          <button onClick={toggleMenu} className="text-white focus:outline-none">
-            {showMenu ? <FontAwesomeIcon icon={faTimes} /> : <FontAwesomeIcon icon={faBars} />}
-          </button>
+
+        {/* Mobile Search Bar */}
+        {/* <div className={`${
+          showSearch ? 'max-h-16 opacity-100 mt-4' : 'max-h-0 opacity-0'
+        } lg:hidden transition-all duration-300 overflow-hidden`}>
+          <input
+            type="text"
+            placeholder="Search books..."
+            className="w-full px-4 py-2 rounded-lg bg-white/10 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
+        </div> */}
+
+        {/* Mobile Menu */}
+        <div className={`lg:hidden ${
+          showMenu 
+            ? 'max-h-screen opacity-100 visible' 
+            : 'max-h-0 opacity-0 invisible'
+        } transition-all duration-300 ease-in-out`}>
+          <ul className="pt-4 pb-3 space-y-2">
+            {renderNavItems()}
+          </ul>
         </div>
-        <ul className={`lg:flex ${showMenu ? 'flex flex-col absolute top-20 left-0 right-0 bg-blue-700 p-5' : 'hidden'} space-y-4 lg:space-y-0 lg:space-x-8 text-white text-base`}>
-          {renderNavItems()}
-        </ul>
       </div>
     </nav>
   );
