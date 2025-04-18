@@ -1,6 +1,10 @@
 import React from "react";
 import { Carousel, Typography, Button } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+
+
 
 const CarouselBooks = () => {
   const navigate = useNavigate();
@@ -9,34 +13,71 @@ const CarouselBooks = () => {
     navigate('/bookspage');
   };
 
+  useGSAP(() => {
+    // Animate headings
+    gsap.from('.carousel-heading', {
+      y: -50,
+      opacity: 0,
+      duration: 1.5,
+      ease: "power3.out",
+      stagger: 0.2
+    });
+
+    // Animate description text
+    gsap.from('.carousel-description', {
+      y: 30,
+      opacity: 0,
+      duration: 1.5,
+      delay: 0.5,
+      ease: "power2.out"
+    });
+
+    // Animate buttons
+    gsap.from('.carousel-buttons', {
+      y: 20,
+      opacity: 0,
+      duration: 1,
+      delay: 1,
+      ease: "back.out(1.7)"
+    });
+
+    // Animate images
+    gsap.from('.carousel-image', {
+      scale: 1.2,
+      opacity: 0,
+      duration: 2,
+      ease: "power2.out"
+    });
+  });
+
   return (
-    <Carousel className="rounded-xl h-screen z-0" autoplay interval={5000}>
+    <Carousel className="hero rounded-xl h-screen z-0" autoplay interval={5000}>
       <div className="relative h-full w-full">
         <img
           src="https://images.alphacoders.com/132/1326370.png"
           alt="image 1"
-          className="h-full w-full object-cover"
+          className="carousel-image h-full w-full object-cover"
         />
         <div className="absolute inset-0 grid h-full w-full place-items-center bg-black/50">
           <div className="w-3/4 text-center md:w-3/4">
             <Typography
               variant="h1"
               color="white"
-              className="mb-4 text-3xl md:text-4xl lg:text-5xl font-Oswald"
+              className="carousel-heading mb-4 text-3xl md:text-4xl lg:text-5xl font-Oswald"
             >
               Welcome to Book Shelter
             </Typography>
             <Typography
               variant="lead"
               color="white"
-              className="mb-12 opacity-80"
+              className="carousel-description mb-12 opacity-80"
             >
               Books open doors to countless worlds, offering solace, knowledge,
               and adventure. They are windows into the human experience, weaving
               tales of triumph and tragedy, love and loss. In their pages, we
               find refuge, inspiration, and boundless possibilities.
-            </Typography>
-            <div className="flex justify-center gap-2">
+              </Typography>
+              <div className="carousel-buttons flex justify-center gap-2">
               <Button size="lg" color="white" onClick={handleExploreClick}>
                 Explore
               </Button>

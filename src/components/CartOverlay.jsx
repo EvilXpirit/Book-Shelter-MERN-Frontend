@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import CheckoutModal from './CheckoutModal';
 import baseUrl from '../../Urls';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes, faTrash, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const CartOverlay = ({ cart, setCart, setShowCart, removeFromCart }) => {
   const [showCheckout, setShowCheckout] = useState(false);
@@ -157,90 +159,131 @@ const CartOverlay = ({ cart, setCart, setShowCart, removeFromCart }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center overflow-y-auto">
-      <div className="bg-white p-6 mt-48 rounded-lg shadow-lg w-3/4 max-h-screen overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Cart</h2>
+    <div className="fixed inset-0 bg-black/60 flex justify-center items-start z-[60] overflow-y-auto">
+      <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-6xl mx-4 my-20 transition-all duration-300 ease-in-out">
+        {/* Header */}
+        <div className="sticky top-0 bg-white px-6 py-4 border-b border-gray-200 rounded-t-xl flex justify-between items-center z-10">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800">Shopping Cart</h2>
+            <p className="text-sm text-gray-500 mt-1">{cart.length} items in your cart</p>
+          </div>
           <button 
             onClick={() => setShowCart(false)} 
-            className="text-red-500 text-xl"
+            className="text-gray-500 hover:text-red-500 transition-colors p-2 hover:bg-red-50 rounded-full"
           >
-            ✖
+            <FontAwesomeIcon icon={faTimes} className="text-xl" />
           </button>
         </div>
-        
+
+        {/* Loading State */}
         {isLoading && (
-          <div className="text-center py-4">
-            Loading...
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           </div>
         )}
 
+        {/* Empty Cart State */}
         {!isLoading && cart.length === 0 ? (
-          <p className="text-gray-600">Your cart is empty.</p>
+          <div className="flex flex-col items-center justify-center py-16">
+            <img 
+              src="/empty-cart.svg" 
+              alt="Empty Cart" 
+              className="w-48 h-48 mb-6 opacity-50"
+            />
+            <p className="text-xl text-gray-600 mb-2">Your cart is empty</p>
+            <p className="text-gray-400 mb-6">Add some books to start shopping!</p>
+            <button 
+              onClick={() => setShowCart(false)}
+              className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            >
+              Continue Shopping
+            </button>
+          </div>
         ) : (
-          <div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="p-6">
+            {/* Cart Items */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {cart.map((item) => (
-                <div key={item._id} className="bg-white shadow-md rounded-lg overflow-hidden">
-                  <img 
-                    src={item.book.imageUrl} 
-                    alt={item.book.bookName} 
-                    className="w-full h-48 object-cover" 
-                  />
+                <div 
+                  key={item._id} 
+                  className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden group">
+                    <img 
+                      src={item.book.imageUrl} 
+                      alt={item.book.bookName} 
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" 
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
                   <div className="p-4">
-                    <h3 className="text-lg font-bold">{item.book.bookName}</h3>
-                    <p className="text-gray-600">{item.book.authorName}</p>
-                    <div className="flex items-center mt-2">
-                      <button
-                        onClick={() => handleDecrement(item._id)}
-                        disabled={isLoading}
-                        className="px-3 py-1 bg-red-500 text-white rounded mr-2 disabled:opacity-50"
-                      >
-                        -
-                      </button>
-                      <p className="text-gray-800">Quantity: {item.quantity}</p>
-                      <button
-                        onClick={() => handleIncrement(item._id)}
-                        disabled={isLoading}
-                        className="px-3 py-1 bg-green-500 text-white rounded ml-2 disabled:opacity-50"
-                      >
-                        +
-                      </button>
+                    <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">{item.book.bookName}</h3>
+                    <p className="text-gray-600 text-sm mb-3">{item.book.authorName}</p>
+                    
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <button
+                          onClick={() => handleDecrement(item._id)}
+                          disabled={isLoading}
+                          className="p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition-colors disabled:opacity-50"
+                        >
+                          <FontAwesomeIcon icon={faMinus} className="w-3 h-3" />
+                        </button>
+                        <span className="text-gray-800 font-medium w-8 text-center">{item.quantity}</span>
+                        <button
+                          onClick={() => handleIncrement(item._id)}
+                          disabled={isLoading}
+                          className="p-2 rounded-full bg-gray-100 hover:bg-green-100 text-gray-600 hover:text-green-500 transition-colors disabled:opacity-50"
+                        >
+                          <FontAwesomeIcon icon={faPlus} className="w-3 h-3" />
+                        </button>
+                      </div>
+                      <p className="text-lg font-bold text-gray-800">₹{(item.book.price * item.quantity).toLocaleString('en-IN')}</p>
                     </div>
-                    <p className="text-gray-800 mt-2">₹ {item.book.price * item.quantity}</p>
+                    
                     <button
                       onClick={() => removeFromCart(item._id)}
                       disabled={isLoading}
-                      className="mt-2 px-4 py-2 bg-red-500 text-white rounded disabled:opacity-50"
+                      className="w-full px-4 py-2 text-red-500 border border-red-500 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 flex items-center justify-center space-x-2"
                     >
-                      Remove
+                      <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
+                      <span>Remove</span>
                     </button>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="flex justify-between items-center mt-4">
-              <div>
-                <h3 className="text-xl font-bold">Total: ₹ {totalPrice}</h3>
-                <button 
-                  onClick={clearCart}
-                  disabled={isLoading || cart.length === 0}
-                  className="mt-2 px-4 py-2 bg-red-500 text-white rounded disabled:opacity-50"
-                >
-                  Clear Cart
-                </button>
+
+            {/* Cart Footer */}
+            <div className="sticky bottom-0 bg-white border-t border-gray-200 pt-4 mt-auto">
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="flex flex-col items-start">
+                  <p className="text-gray-600">Total Amount:</p>
+                  <p className="text-3xl font-bold text-gray-800">₹{totalPrice.toLocaleString('en-IN')}</p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <button 
+                    onClick={clearCart}
+                    disabled={isLoading || cart.length === 0}
+                    className="px-6 py-3 text-red-500 border border-red-500 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
+                  >
+                    Clear Cart
+                  </button>
+                  <button 
+                    onClick={handleBuyNow}
+                    disabled={isLoading || cart.length === 0}
+                    className="px-8 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 font-medium"
+                  >
+                    Proceed to Checkout
+                  </button>
+                </div>
               </div>
-              <button 
-                onClick={handleBuyNow}
-                disabled={isLoading || cart.length === 0}
-                className="mt-2 px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-              >
-                Buy Now
-              </button>
             </div>
           </div>
         )}
       </div>
+      
+      {/* Checkout Modal */}
       {showCheckout && (
         <CheckoutModal 
           cart={cart} 

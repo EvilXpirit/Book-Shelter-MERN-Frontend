@@ -29,6 +29,7 @@ const LandingPage = () => {
   };
   
 
+
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -87,10 +88,10 @@ const LandingPage = () => {
       
       const data = await response.json();
       setCart([...cart, data]);
-      alert("Added to cart successfully!");
+      toast.success("Added to cart successfully!");
     } catch (error) {
       console.error("Error adding to cart:", error);
-      alert("Failed to add to cart");
+      toast.error("Failed to add to cart");
     }
   };
 

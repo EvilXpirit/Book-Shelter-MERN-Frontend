@@ -7,6 +7,8 @@ import { Link as ScrollLink, scroller } from 'react-scroll';
 import axios from 'axios';
 import withCart from './withCart';
 import baseUrl from '../../Urls';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 const Navbar = ({ cart, setShowCart }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -15,6 +17,35 @@ const Navbar = ({ cart, setShowCart }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const location = useLocation();
+
+  // Add GSAP animations
+  useGSAP(() => {
+    // Logo animation
+    gsap.from('.nav-logo', {
+      x: -100,
+      opacity: 0,
+      duration: 1,
+      ease: 'power3.out'
+    });
+
+    // Nav items animation
+    gsap.from('.nav-item', {
+      y: -30,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: 'power2.out'
+    });
+
+    // Mobile menu button animation
+    gsap.from('.mobile-menu-btn', {
+      scale: 0,
+      opacity: 0,
+      duration: 0.5,
+      delay: 0.8,
+      ease: 'back.out(1.7)'
+    });
+  });
 
     // Handle navbar background on scroll
     useEffect(() => {
@@ -37,6 +68,15 @@ const Navbar = ({ cart, setShowCart }) => {
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
+    if (!showMenu) {
+      gsap.from('.mobile-menu-item', {
+        x: -30,
+        opacity: 0,
+        duration: 0.3,
+        stagger: 0.1,
+        ease: 'power2.out'
+      });
+    }
   };
 
   const handleLogout = async () => {
@@ -80,7 +120,7 @@ const Navbar = ({ cart, setShowCart }) => {
   };
   const renderNavItems = () => {
     const commonItems = [
-      <li key="home">
+      <li key="home" className="nav-item">
         <RouterLink 
           to="/" 
           className={`hover:text-yellow-400 relative group py-2 px-3 transition-all duration-300
@@ -91,7 +131,7 @@ const Navbar = ({ cart, setShowCart }) => {
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 group-hover:w-full transition-all duration-300"></span>
         </RouterLink>
       </li>,
-      <li key="books">
+      <li key="books" className="nav-item">
         <button onClick={handleBooksClick}   className={`hover:text-yellow-400 relative group py-2 px-3 transition-all duration-300 text-white`}
         >
           <FontAwesomeIcon icon={faBook} className="pr-2" />
@@ -99,7 +139,7 @@ const Navbar = ({ cart, setShowCart }) => {
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 group-hover:w-full transition-all duration-300"></span>
         </button>
       </li>,
-      <li key="explore">
+      <li key="explore" className="nav-item">
                 <RouterLink 
           to="/bookspage" 
           className={`hover:text-yellow-400 relative group py-2 px-3 transition-all duration-300
@@ -115,7 +155,7 @@ const Navbar = ({ cart, setShowCart }) => {
     if (isLoggedIn) {
       return [
         ...commonItems,
-        <li key="cart">
+        <li key="cart" className="nav-item">
           <RouterLink to="/cart" className={`hover:text-yellow-400 py-2  px-3 relative group transition-all duration-300
             ${location.pathname === '/cart' ? 'text-yellow-400' : 'text-white'}`}
         >
@@ -124,7 +164,7 @@ const Navbar = ({ cart, setShowCart }) => {
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 group-hover:w-full transition-all duration-300"></span>
           </RouterLink>
         </li>,
-        <li key="logout">
+        <li key="logout" className="nav-item">
           <button onClick={handleLogout} className={`hover:text-yellow-400  px-3 relative group transition-all duration-300
             ${location.pathname === '/logout' ? 'text-yellow-400' : 'text-white'}`}
         >
@@ -137,7 +177,7 @@ const Navbar = ({ cart, setShowCart }) => {
     } else {
       return [
         ...commonItems,
-        <li key="login">
+        <li key="login" className="nav-item">
           <RouterLink to="/login" className={`hover:text-yellow-400 py-2 px-3 relative group transition-all duration-300
             ${location.pathname === '/login' ? 'text-yellow-400' : 'text-white'}`}
         >
@@ -147,18 +187,30 @@ const Navbar = ({ cart, setShowCart }) => {
           </RouterLink>
         </li>
       ];
+
+          // Update mobile menu items
+    if (showMenu) {
+      return commonItems.map((item, index) => (
+        <div key={index} className="mobile-menu-item">
+          {item}
+        </div>
+      ));
+    }
+
+    return commonItems;
+
     }
   };
 
   return (
     <nav className={`fixed w-full top-0 left-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-gradient-to-l from-blue-900/75 to-blue-600/75 backdrop-blur-md shadow-2xl' 
+      isScrolled ? 'bg-gradient-to-l from-blue-900/75 to-blue-600/75 backdrop-blur-md shadow-2xl rounded-b-md' 
       : 'bg-gradient-to-r from-blue-900/85 to-blue-600/85 p-5 shadow-lg rounded-b-lg'
     }`}>
       <div className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
-          {/* Logo */}
-          <RouterLink to="/" className="flex items-center space-x-2 group">
+          {/* Logo with animation class */}
+          <RouterLink to="/" className="nav-logo flex items-center space-x-2 group">
             <img 
               src={logo} 
               alt="Logo" 
@@ -171,17 +223,11 @@ const Navbar = ({ cart, setShowCart }) => {
             {renderNavItems()}
           </div>
 
-          {/* Mobile Navigation Button */}
+          {/* Mobile Navigation Button with animation class */}
           <div className="lg:hidden flex items-center space-x-4">
-            {/* <button 
-              onClick={() => setShowSearch(!showSearch)}
-              className="text-white p-2 hover:text-yellow-400 transition-colors duration-300"
-            >
-              <FontAwesomeIcon icon={faSearch} />
-            </button> */}
             <button 
               onClick={toggleMenu} 
-              className="text-white p-2 hover:text-yellow-400 transition-colors duration-300"
+              className="mobile-menu-btn text-white p-2 hover:text-yellow-400 transition-colors duration-300"
             >
               <FontAwesomeIcon icon={showMenu ? faTimes : faBars} />
             </button>

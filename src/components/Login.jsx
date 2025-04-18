@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen pt-28 bg-black/10">
+    <div className="flex items-center justify-center min-h-screen pt-28 bg-black/30">
       <div className="flex flex-col lg:flex-row bg-white/80 p-8 rounded-lg shadow-md w-full max-w-4xl hover:bg-white/95 transition-all ease-in-out duration-200">
         <div className="w-full lg:w-1/2 flex items-center justify-center mb-6 lg:mb-0">
           <MyLottieAnimation />

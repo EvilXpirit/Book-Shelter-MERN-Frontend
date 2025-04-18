@@ -7,6 +7,13 @@ import CartOverlay from "./CartOverlay";
 import BookDetailsModal from "./BookDetailsModal"; 
 import baseUrl from '../../Urls';
 import { toast } from 'react-toastify';
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -32,6 +39,52 @@ const BooksPage = () => {
   const [booksPerPage] = useState(8);
   const [selectedBook, setSelectedBook] = useState(null); 
   const [user, setUser] = useState(null); 
+
+  useGSAP(() => {
+    // Header animation
+    gsap.from(".page-title", {
+      y: -50,
+      opacity: 0,
+      duration: 1,
+      ease: "power3.out"
+    });
+
+    // Search and filter controls animation
+    gsap.from(".controls-container", {
+      y: 30,
+      opacity: 0,
+      duration: 1,
+      delay: 0.5,
+      ease: "power2.out"
+    });
+
+    // Book cards stagger animation
+    gsap.from(".book-card", {
+      scale: 0.8,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: "back.out(1.7)",
+      // scrollTrigger: {
+      //   trigger: ".books",
+      //   start: "top center",
+      //   toggleActions: "play none none reverse"
+      // }
+    });
+
+    // Category headers animation
+    gsap.from(".category-header", {
+      x: -100,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.2,
+      scrollTrigger: {
+        trigger: ".books",
+        start: "top center",
+        toggleActions: "play none none reverse"
+      }
+    });
+  });
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -226,73 +279,113 @@ const BooksPage = () => {
   };
 
   return (
-    <div className="container mx-auto pt-32 p-2 bg-black/50">
-      <h1 className="text-4xl font-bold text-center text-white mb-8 drop-shadow-lg">
-        Book Store
-      </h1>
-      <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-        <div className="flex items-center justify-center flex-1 mb-4 md:mb-0">
-          <label htmlFor="search" className="mr-2 text-white">
-            Search:
-          </label>
-          <input
-            type="text"
-            id="search"
-            className="p-2 w-full md:w-3/5 border border-gray-300 rounded bg-white/80 transition-all duration-200 ease-in-out hover:bg-white/90"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-        </div>
-        <div className="flex items-center flex-1 justify-end">
-          <label htmlFor="category" className="mr-2 text-white">
-            Filter by:
-          </label>
-          <select
-            id="category"
-            className="p-2 w-full md:w-auto border border-gray-300 rounded bg-white/80"
-            value={category}
-            onChange={handleCategoryChange}
-          >
-            <option value="all">All Categories</option>
-            <option value="genre">Genre</option>
-            <option value="authorName">Author Name</option>
-          </select>
-        </div>
-      </div>
-      <div className="books p-5 pt-14">
-        {Object.keys(groupedBooks).map((key) => (
-          <div key={key}>
-            <h2 className="text-2xl text-center pt-4 pb-4 font-semibold text-white mb-4">
-              {key}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {groupedBooks[key].map((book) => (
-                <BookCard key={book._id} book={book} addToWishlist={addToWishlist} addToCart={addToCart} openModal={openModal} />
-              ))}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900/75 via-blue-900/75 to-gray-900/65">
+      <div className="container mx-auto pt-36 px-4 sm:px-6 lg:px-8">
+        <h1 className="page-title text-5xl font-bold text-center text-white mb-12 tracking-wider">
+          Discover Your Next Adventure
+        </h1>
+
+        <div className="controls-container backdrop-blur-md bg-white/10 rounded-xl p-6 mb-8 shadow-2xl">
+          <div className="flex flex-col md:flex-row gap-6 items-center">
+            {/* Search Section */}
+            <div className="flex-1 w-full">
+              <div className="relative">
+                <input
+                  type="text"
+                  id="search"
+                  className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+                  placeholder="Search books or authors..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/70">
+                  🔍
+                </span>
+              </div>
+            </div>
+
+            {/* Filter Section */}
+            <div className="flex-1 w-full md:w-auto">
+              <select
+                id="category"
+                className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+                value={category}
+                onChange={handleCategoryChange}
+              >
+                <option className="text-black" value="all">All Categories</option>
+                <option className="text-black" value="genre">By Genre</option>
+                <option className="text-black" value="authorName">By Author</option>
+              </select>
             </div>
           </div>
-        ))}
-      </div>
-      <div className="flex justify-center mt-4">
-        {Array.from({ length: totalPages }, (_, index) => index + 1).map((number) => (
+        </div>
+
+        <div className="books space-y-12">
+          {Object.keys(groupedBooks).map((key) => (
+            <div key={key} className="category-section">
+              <h2 className="category-header text-3xl text-white mb-8 pl-4 border-l-4 border-blue-500">
+                {key}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {groupedBooks[key].map((book) => (
+                  <div key={book._id} className="book-card">
+                    <BookCard
+                      book={book}
+                      addToWishlist={addToWishlist}
+                      addToCart={addToCart}
+                      openModal={openModal}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center mt-12 pb-8">
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map((number) => (
+            <button
+              key={number}
+              onClick={() => handleClick(number)}
+              className={`mx-1 px-4 py-2 rounded-lg transition-all duration-300 ${
+                currentPage === number
+                  ? 'bg-blue-600 text-white shadow-lg scale-105'
+                  : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
+            >
+              {number}
+            </button>
+          ))}
+        </div>
+
+        {/* Floating Action Buttons */}
+        <div className="fixed bottom-8 right-8 flex flex-col gap-4">
           <button
-            key={number}
-            onClick={() => handleClick(number)}
-            className={`mx-1 px-3 py-2 rounded ${currentPage === number ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+            onClick={() => setShowCart(!showCart)}
+            className="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300"
           >
-            {number}
+            <FontAwesomeIcon icon={faCartShopping} size="lg" />
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+              {cart.length}
+            </span>
           </button>
-        ))}
+          <button
+            onClick={() => setShowWishlist(!showWishlist)}
+            className="bg-pink-600 text-white p-4 rounded-full shadow-lg hover:bg-pink-700 transition-all duration-300"
+          >
+            <FontAwesomeIcon icon={faHeart} size="lg" />
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+              {wishlist.length}
+            </span>
+          </button>
+        </div>
+
+        {/* Modals */}
+        {showWishlist && <WishlistOverlay wishlist={wishlist} removeFromWishlist={removeFromWishlist} setShowWishlist={setShowWishlist} />}
+        {showCart && <CartOverlay cart={cart} setShowCart={setShowCart} removeFromCart={removeFromCart} user={user} />}
+        {selectedBook && <BookDetailsModal book={selectedBook} closeModal={closeModal} addToWishlist={addToWishlist} addToCart={addToCart} />}
       </div>
-      {showWishlist && <WishlistOverlay wishlist={wishlist} removeFromWishlist={removeFromWishlist} setShowWishlist={setShowWishlist} />}
-      {showCart && <CartOverlay cart={cart} setShowCart={setShowCart} removeFromCart={removeFromCart} user={user} />}
-      {selectedBook && <BookDetailsModal book={selectedBook} closeModal={closeModal} addToWishlist={addToWishlist} addToCart={addToCart} />}
-      <button onClick={() => setShowCart(!showCart)} className="fixed top-28 right-4 bg-green-600 text-white px-2 py-2 rounded-lg">
-        <FontAwesomeIcon icon={faCartShopping} size="lg" />  <span className="text-sm">{cart.length} </span>
-      </button>
-      <button onClick={() => setShowWishlist(!showWishlist)} className="fixed top-28 right-20 bg-blue-700 text-white px-2 py-2 rounded-lg">
-        <FontAwesomeIcon icon={faHeart} size="lg" /> <span className="text-sm">{wishlist.length}</span>
-      </button>
     </div>
   );
 };
