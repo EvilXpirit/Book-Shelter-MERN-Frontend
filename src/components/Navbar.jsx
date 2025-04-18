@@ -138,7 +138,7 @@ const Navbar = ({ cart, setShowCart }) => {
       return [
         ...commonItems,
         <li key="login">
-          <RouterLink to="/login" className={`hover:text-yellow-400 py-2 relative group transition-all duration-300
+          <RouterLink to="/login" className={`hover:text-yellow-400 py-2 px-3 relative group transition-all duration-300
             ${location.pathname === '/login' ? 'text-yellow-400' : 'text-white'}`}
         >
             <FontAwesomeIcon icon={faUser} className="pr-2" />
