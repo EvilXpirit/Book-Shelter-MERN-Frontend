@@ -281,7 +281,7 @@ const BooksPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900/75 via-blue-900/75 to-gray-900/65">
       <div className="container mx-auto pt-36 px-4 sm:px-6 lg:px-8">
-        <h1 className="page-title text-5xl font-bold text-center text-white mb-12 tracking-wider">
+        <h1 className="page-title text-5xl text-center text-white mb-12 tracking-wider">
           Discover Your Next Adventure
         </h1>
 

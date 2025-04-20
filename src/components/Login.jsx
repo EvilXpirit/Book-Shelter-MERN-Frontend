@@ -1,18 +1,22 @@
 // src/components/Login.jsx
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import MyLottieAnimation from './MyLottieAnimation';
-import baseUrl from '../../Urls';
+import React, { useState, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import MyLottieAnimation from "./MyLottieAnimation";
+import baseUrl from "../../Urls";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const Login = () => {
   const navigate = useNavigate();
+  const formRef = useRef(null);
+  const containerRef = useRef(null);
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
 
-  const [alert, setAlert] = useState({ message: '', type: '' });
+  const [alert, setAlert] = useState({ message: "", type: "" });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,70 +30,169 @@ const Login = () => {
         password: formData.password,
       });
       const { token, redirect } = response.data;
-      localStorage.setItem('username', formData.username);
-      localStorage.setItem('token', token);
-      setAlert({ message: 'Logged in successfully', type: 'success' });
-      console.log(formData.username, 'has logged in')
-      console.log('Login successful', response.data);
+      localStorage.setItem("username", formData.username);
+      localStorage.setItem("token", token);
+      setAlert({ message: "Logged in successfully", type: "success" });
+      console.log(formData.username, "has logged in");
+      console.log("Login successful", response.data);
 
       if (redirect) {
         navigate(redirect); // Redirect based on the response
       }
     } catch (error) {
-      setAlert({ message: `Error logging in: ${error.response?.data?.message || error.message}`, type: 'error' });
-      console.error('Error logging in', error.response || error.message);
+      setAlert({
+        message: `Error logging in: ${
+          error.response?.data?.message || error.message
+        }`,
+        type: "error",
+      });
+      console.error("Error logging in", error.response || error.message);
     }
   };
 
+  // GSAP Animations
+  useGSAP(
+    () => {
+      // Page container animation
+      gsap.from(containerRef.current, {
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out",
+      });
+
+      // Form container animation
+      gsap.from(".form-container", {
+        y: 100,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+
+      // Lottie animation container
+      gsap.from(".lottie-wrapper", {
+        x: -50,
+        opacity: 0,
+        duration: 1,
+        delay: 0.3,
+        ease: "power2.out",
+      });
+
+      // Form inputs animation
+      gsap.from(".form-field", {
+        y: 20,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.6,
+        delay: 0.5,
+        ease: "power2.out",
+      });
+
+      // Button animation
+      gsap.from(".login-btn-animate", {
+        scale: 0.8,
+        opacity: 0,
+        duration: 0.6,
+        delay: 0.8,
+        ease: "back.out(1.7)",
+      });
+    },
+    { scope: containerRef }
+  );
+
   return (
-    <div className="flex items-center justify-center min-h-screen pt-28 bg-black/30">
-      <div className="flex flex-col lg:flex-row bg-white/80 p-8 rounded-lg shadow-md w-full max-w-4xl hover:bg-white/95 transition-all ease-in-out duration-200">
-        <div className="w-full lg:w-1/2 flex items-center justify-center mb-6 lg:mb-0">
-          <MyLottieAnimation />
-        </div>
-        <div className="w-full lg:w-1/2 p-4">
-          <h2 className="text-2xl font-semibold mb-6 text-center">Login</h2>
+    <div className="min-h-screen flex items-center justify-center pt-32 py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-900/50 via-black to-purple-900/50">
+      <div
+        ref={containerRef}
+        className="max-w-4xl w-full space-y-8 bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-2xl"
+      >
+        <div className="flex flex-col lg:flex-row items-center gap-12">
+          {/* Lottie Animation Section */}
+          <div className="lottie-wrapper w-full lg:w-1/2 flex justify-center">
+            <MyLottieAnimation />
+          </div>
 
-          {alert.message && (
-            <div className={`mb-4 p-4 rounded-md text-white ${alert.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
-              {alert.message}
+          {/* Form Section */}
+          <div className="form-container w-full lg:w-1/2 space-y-6">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-white">Welcome Back</h2>
+              <p className="mt-2 text-gray-300">
+                Please sign in to your account
+              </p>
             </div>
-          )}
 
-          <form onSubmit={handleSubmit} className='mt-10'>
-            <div className="mb-4">
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-3"
-              />
+            {alert.message && (
+              <div
+                className={`p-4 rounded-lg text-white ${
+                  alert.type === "success" ? "bg-green-500/80" : "bg-red-500/80"
+                }`}
+              >
+                {alert.message}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6 mt-8">
+              <div className="form-field">
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium text-gray-200"
+                >
+                  Username
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="mt-1 block w-full px-4 py-3 bg-white/10 border border-gray-500 rounded-lg 
+                           text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                           transition-all duration-200"
+                  placeholder="Enter your username"
+                />
+              </div>
+
+              <div className="form-field">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-200"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="mt-1 block w-full px-4 py-3 bg-white/10 border border-gray-500 rounded-lg 
+                           text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                           transition-all duration-200"
+                  placeholder="Enter your password"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="login-btn-animate w-full flex justify-center py-3 px-4 
+           border border-transparent rounded-lg text-sm font-medium 
+           text-white bg-blue-600 hover:bg-blue-700 
+           hover:scale-[1.02] shadow-lg hover:shadow-blue-500/50"
+              >
+                Sign in
+              </button>
+            </form>
+
+            <div className="text-center">
+              <p className="text-sm text-gray-300">
+                Don't have an account?{" "}
+                <Link
+                  to="/signup"
+                  className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                >
+                  Sign Up
+                </Link>
+              </p>
             </div>
-            <div className="mb-6">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-3"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
-            >
-              Login
-            </button>
-          </form>
-          <div className="mt-4 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account? <Link to="/signup" className="text-blue-500 hover:underline">Sign Up</Link>
-            </p>
           </div>
         </div>
       </div>
