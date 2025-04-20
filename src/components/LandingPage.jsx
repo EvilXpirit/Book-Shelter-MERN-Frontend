@@ -116,7 +116,7 @@ const LandingPage = () => {
 
 
   return (
-    <div id="home" className="container mx-auto pt-28 p-2 bg-black/50">
+    <div id="home" className="mx-auto pt-28 p-2 bg-black/50">
        <CarouselBooks />
        <div className="container mx-auto mt-14">
        <h1 id="new-arrivals" className="text-4xl font-bold text-center text-white pb-4 drop-shadow-lg">
