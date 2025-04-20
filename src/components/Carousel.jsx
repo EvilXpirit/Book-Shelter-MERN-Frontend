@@ -3,8 +3,9 @@ import { Carousel, Typography, Button } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-
-
+import bookwallpaper from "../assets/bookwallpaper.jpg"; 
+import bookwallpaper2 from "../assets/bookwallpaper2.jpg"; 
+import bookwallpaper3 from "../assets/bookwallpaper3.jpg"; 
 
 const CarouselBooks = () => {
   const navigate = useNavigate();
@@ -51,10 +52,10 @@ const CarouselBooks = () => {
   });
 
   return (
-    <Carousel className="hero rounded-xl h-screen z-0" autoplay interval={5000}>
+    <Carousel className="hero rounded-xl h-screen z-0" transition={{ duration: 1 }} loop={true} autoplay interval={6000}>
       <div className="relative h-full w-full">
         <img
-          src="https://images.alphacoders.com/132/1326370.png"
+          src={bookwallpaper}
           alt="image 1"
           className="carousel-image h-full w-full object-cover"
         />
@@ -81,16 +82,16 @@ const CarouselBooks = () => {
               <Button size="lg" color="white" onClick={handleExploreClick}>
                 Explore
               </Button>
-              <Button size="lg" color="white" variant="text">
+              {/* <Button size="lg" color="white" variant="text">
                 Gallery
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>
       </div>
       <div className="relative h-full w-full">
         <img
-          src="https://images7.alphacoders.com/133/thumb-1920-1338193.png"
+          src={bookwallpaper2}
           alt="image 2"
           className="h-full w-full object-cover"
         />
@@ -117,21 +118,21 @@ const CarouselBooks = () => {
               <Button size="lg" color="white" onClick={handleExploreClick}>
                 Explore
               </Button>
-              <Button size="lg" color="white" variant="text">
+              {/* <Button size="lg" color="white" variant="text">
                 Gallery
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>
       </div>
       <div className="relative h-full w-full">
         <img
-          src="https://images.alphacoders.com/115/1159192.jpg"
+          src={bookwallpaper3}
           alt="image 3"
           className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 grid h-full w-full items-end bg-black/50">
-          <div className="w-3/4 pl-12 pb-12 md:w-2/4 md:pl-20 md:pb-20 lg:pl-32 lg:pb-32">
+          <div className="w-3/4 pl-12 pb-10 md:w-2/4 md:pl-20 md:pb-20 lg:pl-32 lg:pb-48">
             <Typography
               variant="h1"
               color="white"
@@ -154,9 +155,9 @@ const CarouselBooks = () => {
               <Button size="lg" color="white" onClick={handleExploreClick}>
                 Explore
               </Button>
-              <Button size="lg" color="white" variant="text">
+              {/* <Button size="lg" color="white" variant="text">
                 Gallery
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>
